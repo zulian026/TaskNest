@@ -5,7 +5,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\TaskController;
 use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Auth\GitHubAuthController;
+
 
 // Public routes
 Route::post('/register', [AuthController::class, 'register']);
@@ -30,4 +32,14 @@ Route::prefix('auth/github')->group(function () {
     Route::get('redirect', [GitHubAuthController::class, 'redirectToGitHub']);
     Route::get('callback', [GitHubAuthController::class, 'handleGitHubCallback']);
     Route::post('unlink', [GitHubAuthController::class, 'unlinkGitHub'])->middleware('auth:sanctum');
+});
+
+Route::middleware('auth:sanctum')->group(function () {
+    // Routes yang sudah ada
+
+    // Profile routes
+    Route::get('/profile', [ProfileController::class, 'show']);
+    Route::put('/profile', [ProfileController::class, 'update']);
+    Route::post('/profile/avatar', [ProfileController::class, 'updateAvatar']);
+    Route::delete('/profile/avatar', [ProfileController::class, 'deleteAvatar']);
 });

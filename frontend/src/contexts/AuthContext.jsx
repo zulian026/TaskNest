@@ -77,6 +77,63 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const updateProfile = async (formData) => {
+    try {
+      const response = await authAPI.updateProfile(formData);
+      
+      if (response.data.success) {
+        const updatedUser = response.data.data;
+        setUser(updatedUser);
+        localStorage.setItem('user', JSON.stringify(updatedUser));
+        return { success: true, data: updatedUser };
+      }
+    } catch (error) {
+      return {
+        success: false,
+        message: error.response?.data?.message || 'Failed to update profile',
+        errors: error.response?.data?.errors || {}
+      };
+    }
+  };
+
+  const updateAvatar = async (avatarFile) => {
+    try {
+      const formData = new FormData();
+      formData.append('avatar', avatarFile);
+
+      const response = await authAPI.updateAvatar(formData);
+      
+      if (response.data.success) {
+        // Refresh user data
+        await fetchUser();
+        return { success: true, data: response.data };
+      }
+    } catch (error) {
+      return {
+        success: false,
+        message: error.response?.data?.message || 'Failed to update avatar',
+        errors: error.response?.data?.errors || {}
+      };
+    }
+  };
+
+  const deleteAvatar = async () => {
+    try {
+      const response = await authAPI.deleteAvatar();
+      
+      if (response.data.success) {
+        // Refresh user data
+        await fetchUser();
+        return { success: true, data: response.data };
+      }
+    } catch (error) {
+      return {
+        success: false,
+        message: error.response?.data?.message || 'Failed to delete avatar'
+      };
+    }
+  };
+
   const logout = async () => {
     try {
       await authAPI.logout();
@@ -97,8 +154,11 @@ export const AuthProvider = ({ children }) => {
     login,
     register,
     logout,
-    setUser,      // Add this
-    setToken,     // Add this
+    updateProfile,
+    updateAvatar,
+    deleteAvatar,
+    setUser,
+    setToken,
     isAuthenticated: !!token && !!user,
   };
 

@@ -90,42 +90,24 @@ const TaskForm = ({ isOpen, onClose, task, onSuccess }) => {
   };
 
   const priorityOptions = [
-    { value: 'low', label: 'Rendah', color: 'text-green-600' },
-    { value: 'medium', label: 'Sedang', color: 'text-yellow-600' },
-    { value: 'high', label: 'Tinggi', color: 'text-red-600' },
+    { value: 'low', label: '🟢 Rendah' },
+    { value: 'medium', label: '🟡 Sedang' },
+    { value: 'high', label: '🔴 Tinggi' },
   ];
 
   const statusOptions = [
-    { value: 'pending', label: 'Tertunda', color: 'text-gray-600' },
-    { value: 'in_progress', label: 'Sedang Dikerjakan', color: 'text-blue-600' },
-    { value: 'completed', label: 'Selesai', color: 'text-green-600' },
+    { value: 'pending', label: '⏳ Tertunda' },
+    { value: 'in_progress', label: '🔄 Sedang Dikerjakan' },
+    { value: 'completed', label: '✅ Selesai' },
   ];
 
   const categoryOptions = [
-    { value: '', label: 'Pilih Kategori' },
+    { value: '', label: '🏷️ Pilih Kategori' },
     ...categories.map(cat => ({
       value: cat.id,
       label: cat.name
     }))
   ];
-
-  const getPriorityIcon = (priority) => {
-    switch (priority) {
-      case 'low': return '🟢';
-      case 'medium': return '🟡';
-      case 'high': return '🔴';
-      default: return '';
-    }
-  };
-
-  const getStatusIcon = (status) => {
-    switch (status) {
-      case 'pending': return '⏳';
-      case 'in_progress': return '🚀';
-      case 'completed': return '✅';
-      default: return '';
-    }
-  };
 
   return (
     <Modal
@@ -133,71 +115,72 @@ const TaskForm = ({ isOpen, onClose, task, onSuccess }) => {
       onClose={onClose}
       title=""
     >
-      <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/20 overflow-hidden">
-        {/* Header */}
-        <div className="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 px-8 py-6 relative overflow-hidden">
-          <div className="absolute inset-0 bg-black/10"></div>
-          <div className="relative z-10">
-            <h2 className="text-2xl font-bold text-white mb-2 flex items-center gap-3">
-              {task ? '✏️ Edit Tugas' : '➕ Tambah Tugas Baru'}
-            </h2>
-            <p className="text-blue-100 text-sm">
-              {task ? 'Perbarui informasi tugas Anda' : 'Buat tugas baru untuk meningkatkan produktivitas'}
-            </p>
+      <div className="bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden max-w-2xl mx-auto">
+        {/* Header - matching TaskList gradient style */}
+        <div className="bg-gradient-to-r from-blue-500 to-indigo-500 px-8 py-6 relative">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <div className="bg-white/20 backdrop-blur-sm rounded-xl p-3">
+                <span className="text-2xl">{task ? '✏️' : '➕'}</span>
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold text-white mb-1">
+                  {task ? 'Edit Tugas' : 'Tambah Tugas Baru'}
+                </h2>
+                <p className="text-white/80">
+                  {task ? 'Perbarui informasi tugas Anda' : 'Buat tugas baru untuk meningkatkan produktivitas'}
+                </p>
+              </div>
+            </div>
+            
+            <button
+              onClick={onClose}
+              className="bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white rounded-full w-10 h-10 flex items-center justify-center transition-all duration-200"
+            >
+              <span className="text-lg">✕</span>
+            </button>
           </div>
-          <button
-            onClick={onClose}
-            className="absolute top-4 right-4 text-white/80 hover:text-white transition-colors duration-200 bg-white/10 hover:bg-white/20 rounded-full w-8 h-8 flex items-center justify-center backdrop-blur-sm"
-          >
-            ✕
-          </button>
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="p-8 space-y-6 bg-transparent">
+        <form onSubmit={handleSubmit} className="p-8 space-y-6">
           {/* Title Field */}
           <div className="space-y-2">
-            <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-2">
-              📝 Judul Tugas <span className="text-red-500">*</span>
+            <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
+              <span>📝</span> Judul Tugas <span className="text-red-500">*</span>
             </label>
-            <div className="relative">
-              <input
-                type="text"
-                name="title"
-                value={formData.title}
-                onChange={handleChange}
-                required
-                className="block w-full px-4 py-3 bg-white/50 backdrop-blur-sm border-2 border-gray-200/60 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-200 placeholder-gray-400"
-                placeholder="Masukkan judul tugas yang menarik..."
-              />
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-purple-500/5 rounded-xl pointer-events-none"></div>
-            </div>
+            <Input
+              type="text"
+              name="title"
+              value={formData.title}
+              onChange={handleChange}
+              required
+              placeholder="Masukkan judul tugas yang menarik..."
+              className="bg-gray-50 border-gray-200 focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+            />
             {errors.title && (
-              <p className="mt-1 text-sm text-red-500 flex items-center gap-1">
-                ⚠️ {errors.title[0]}
+              <p className="text-sm text-red-500 flex items-center gap-1">
+                <span>⚠️</span> {errors.title[0]}
               </p>
             )}
           </div>
 
           {/* Description Field */}
           <div className="space-y-2">
-            <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-2">
-              📄 Deskripsi
+            <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
+              <span>📄</span> Deskripsi
             </label>
-            <div className="relative">
-              <textarea
-                name="description"
-                value={formData.description}
-                onChange={handleChange}
-                rows={4}
-                className="block w-full px-4 py-3 bg-white/50 backdrop-blur-sm border-2 border-gray-200/60 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-200 placeholder-gray-400 resize-none"
-                placeholder="Jelaskan detail tugas Anda..."
-              />
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-purple-500/5 rounded-xl pointer-events-none"></div>
-            </div>
+            <textarea
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              rows={4}
+              className="block w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 focus:bg-white transition-all duration-200 placeholder-gray-400 resize-none"
+              placeholder="Jelaskan detail tugas Anda..."
+            />
             {errors.description && (
-              <p className="mt-1 text-sm text-red-500 flex items-center gap-1">
-                ⚠️ {errors.description[0]}
+              <p className="text-sm text-red-500 flex items-center gap-1">
+                <span>⚠️</span> {errors.description[0]}
               </p>
             )}
           </div>
@@ -205,63 +188,37 @@ const TaskForm = ({ isOpen, onClose, task, onSuccess }) => {
           {/* Priority and Status */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
-              <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-2">
-                🎯 Prioritas
+              <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                <span>🎯</span> Prioritas
               </label>
-              <div className="relative">
-                <select
-                  name="priority"
-                  value={formData.priority}
-                  onChange={handleChange}
-                  className="block w-full px-4 py-3 bg-white/50 backdrop-blur-sm border-2 border-gray-200/60 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-200 appearance-none cursor-pointer"
-                >
-                  {priorityOptions.map(option => (
-                    <option key={option.value} value={option.value}>
-                      {getPriorityIcon(option.value)} {option.label}
-                    </option>
-                  ))}
-                </select>
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-purple-500/5 rounded-xl pointer-events-none"></div>
-                <div className="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none">
-                  <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
-                  </svg>
-                </div>
-              </div>
+              <Select
+                name="priority"
+                value={formData.priority}
+                onChange={handleChange}
+                options={priorityOptions}
+                className="bg-gray-50 border-gray-200 focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+              />
               {errors.priority && (
-                <p className="mt-1 text-sm text-red-500 flex items-center gap-1">
-                  ⚠️ {errors.priority[0]}
+                <p className="text-sm text-red-500 flex items-center gap-1">
+                  <span>⚠️</span> {errors.priority[0]}
                 </p>
               )}
             </div>
 
             <div className="space-y-2">
-              <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-2">
-                📊 Status
+              <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                <span>📊</span> Status
               </label>
-              <div className="relative">
-                <select
-                  name="status"
-                  value={formData.status}
-                  onChange={handleChange}
-                  className="block w-full px-4 py-3 bg-white/50 backdrop-blur-sm border-2 border-gray-200/60 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-200 appearance-none cursor-pointer"
-                >
-                  {statusOptions.map(option => (
-                    <option key={option.value} value={option.value}>
-                      {getStatusIcon(option.value)} {option.label}
-                    </option>
-                  ))}
-                </select>
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-purple-500/5 rounded-xl pointer-events-none"></div>
-                <div className="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none">
-                  <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
-                  </svg>
-                </div>
-              </div>
+              <Select
+                name="status"
+                value={formData.status}
+                onChange={handleChange}
+                options={statusOptions}
+                className="bg-gray-50 border-gray-200 focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+              />
               {errors.status && (
-                <p className="mt-1 text-sm text-red-500 flex items-center gap-1">
-                  ⚠️ {errors.status[0]}
+                <p className="text-sm text-red-500 flex items-center gap-1">
+                  <span>⚠️</span> {errors.status[0]}
                 </p>
               )}
             </div>
@@ -270,83 +227,70 @@ const TaskForm = ({ isOpen, onClose, task, onSuccess }) => {
           {/* Category and Due Date */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
-              <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-2">
-                🏷️ Kategori
+              <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                <span>🏷️</span> Kategori
               </label>
-              <div className="relative">
-                <select
-                  name="category_id"
-                  value={formData.category_id}
-                  onChange={handleChange}
-                  className="block w-full px-4 py-3 bg-white/50 backdrop-blur-sm border-2 border-gray-200/60 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-200 appearance-none cursor-pointer"
-                >
-                  {categoryOptions.map(option => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-purple-500/5 rounded-xl pointer-events-none"></div>
-                <div className="absolute inset-y-0 right-0 flex items-center pr-4 pointer-events-none">
-                  <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
-                  </svg>
-                </div>
-              </div>
+              <Select
+                name="category_id"
+                value={formData.category_id}
+                onChange={handleChange}
+                options={categoryOptions}
+                className="bg-gray-50 border-gray-200 focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+              />
               {errors.category_id && (
-                <p className="mt-1 text-sm text-red-500 flex items-center gap-1">
-                  ⚠️ {errors.category_id[0]}
+                <p className="text-sm text-red-500 flex items-center gap-1">
+                  <span>⚠️</span> {errors.category_id[0]}
                 </p>
               )}
             </div>
 
             <div className="space-y-2">
-              <label className="flex items-center gap-2 text-sm font-semibold text-gray-700 mb-2">
-                📅 Tanggal Jatuh Tempo
+              <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                <span>📅</span> Tanggal Jatuh Tempo
               </label>
-              <div className="relative">
-                <input
-                  type="date"
-                  name="due_date"
-                  value={formData.due_date}
-                  onChange={handleChange}
-                  className="block w-full px-4 py-3 bg-white/50 backdrop-blur-sm border-2 border-gray-200/60 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-200"
-                />
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-purple-500/5 rounded-xl pointer-events-none"></div>
-              </div>
+              <Input
+                type="date"
+                name="due_date"
+                value={formData.due_date}
+                onChange={handleChange}
+                className="bg-gray-50 border-gray-200 focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+              />
               {errors.due_date && (
-                <p className="mt-1 text-sm text-red-500 flex items-center gap-1">
-                  ⚠️ {errors.due_date[0]}
+                <p className="text-sm text-red-500 flex items-center gap-1">
+                  <span>⚠️</span> {errors.due_date[0]}
                 </p>
               )}
             </div>
           </div>
 
           {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row justify-end gap-3 pt-6 border-t border-gray-200/50">
-            <button
+          <div className="flex flex-col sm:flex-row justify-end gap-3 pt-6 border-t border-gray-100">
+            <Button
               type="button"
               onClick={onClose}
-              className="px-6 py-3 text-sm font-semibold text-gray-600 bg-white/50 backdrop-blur-sm border-2 border-gray-200/60 rounded-xl hover:bg-gray-50/70 hover:border-gray-300/60 focus:outline-none focus:ring-2 focus:ring-gray-400/50 transition-all duration-200 flex items-center justify-center gap-2"
+              variant="secondary"
+              className="bg-gray-100 hover:bg-gray-200 text-gray-700 border-gray-200"
             >
-              ❌ Batal
-            </button>
-            <button
+              <span className="mr-2">❌</span>
+              Batal
+            </Button>
+            <Button
               type="submit"
               disabled={loading}
-              className="px-6 py-3 text-sm font-semibold text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 border-2 border-transparent rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/50 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-2 transform hover:scale-105"
+              className="bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
             >
               {loading ? (
                 <>
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
                   {task ? 'Memperbarui...' : 'Membuat...'}
                 </>
               ) : (
                 <>
-                  {task ? '💾 Perbarui Tugas' : '✨ Buat Tugas'}
+                  <span className="mr-2">{task ? '💾' : '✨'}</span>
+                  {task ? 'Perbarui Tugas' : 'Buat Tugas'}
                 </>
               )}
-            </button>
+            </Button>
           </div>
         </form>
       </div>

@@ -167,8 +167,8 @@ const TaskList = ({ filter }) => {
     return filter ? configs[filter] : {
       title: "Semua Tugas",
       icon: "📋", 
-      gradient: "from-slate-600 to-gray-600",
-      bgGradient: "from-slate-50 to-gray-50",
+      gradient: "bg-gradient-to-r from-blue-500 to-indigo-500",
+      bgGradient: "bg-gradient-to-r from-blue-500 to-indigo-500",
       description: "Kelola semua tugas Anda"
     };
   };
